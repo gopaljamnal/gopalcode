@@ -1,0 +1,31 @@
+// Load ASP.NET MVC Partial Views Dynamically Using JQuery
+
+public ActionResult Index()
+{
+    using (NorthwindEntities db = new NorthwindEntities())
+    {
+        List<Customer> model = db.Customers.ToList();
+        return View(model);
+    }
+}
+
+public ActionResult GetView(string customerID,string viewName)
+{
+    object model = null;
+    if(viewName=="CustomerDetails")
+    {
+        using(NorthwindEntities db=new NorthwindEntities())
+        {
+            model = db.Customers.Find(customerID);
+        }
+    }
+    if (viewName == "OrderDetails")
+    {
+        using (NorthwindEntities db = new NorthwindEntities())
+        {
+            model = db.Orders.Where(o => o.CustomerID == customerID)
+                      .OrderBy(o => o.OrderID).ToList();
+        }
+    }
+    return PartialView(viewName,model);
+}
