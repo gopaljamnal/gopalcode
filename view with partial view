@@ -1,0 +1,91 @@
+@model MVCViewsThroughAjax.Models.Customer
+
+<table border="1" cellpadding="10">
+    <tr>
+        <td>Customer ID :</td>
+        <td>@Model.CustomerID</td>
+    </tr>
+    <tr>
+        <td>Company Name :</td>
+        <td>@Model.CompanyName</td>
+    </tr>
+    <tr>
+        <td>Contact Name :</td>
+        <td>@Model.ContactName</td>
+    </tr>
+    <tr>
+        <td>Country :</td>
+        <td>@Model.Country</td>
+    </tr>
+</table>
+
+
+@model List<MVCViewsThroughAjax.Models.Order>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Order ID</th>
+        <th>Order Date</th>
+        <th>Shipping Date</th>
+        <th>Shipped To</th>
+    </tr>
+    @foreach(var item in Model)
+    { 
+        <tr>
+            <td>@item.OrderID</td>
+            <td>@item.OrderDate</td>
+            <td>@item.ShippedDate</td>
+            <td>@item.ShipCountry</td>
+        </tr>
+    }
+</table>
+
+
+@model List<MVCViewsThroughAjax.Models.Customer>
+
+...
+<html>
+<head>
+...
+</head>
+<body>
+    <div id="viewPlaceHolder"></div>
+    <br /><br />
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Customer ID</th>
+            <th>Company Name</th>
+            <th colspan="2">Actions</th>
+        </tr>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@item.CustomerID</td>
+                <td>@item.CompanyName</td>
+                <td><input type="button" class="customerDetails" 
+                           value="Customer Details" /></td>
+                <td><input type="button" class="orderDetails" 
+                           value="Order Details" /></td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
+
+
+$(document).ready(function () {
+
+    $(".customerDetails").click(function (evt) {
+        var cell=$(evt.target).closest("tr").children().first();
+        var custID=cell.text();
+        $("#viewPlaceHolder").load("/home/getview", 
+            { customerID: custID, viewName: "CustomerDetails" });
+    });
+
+    $(".orderDetails").click(function (evt) {
+        var cell = $(evt.target).closest("tr").children().first();
+        var custID = cell.text();
+        $("#viewPlaceHolder").load("/home/getview", 
+           { customerID: custID, viewName: "OrderDetails" });
+    });
+});
